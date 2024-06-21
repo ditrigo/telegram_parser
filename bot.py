@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import ParseMode
 from aiogram.utils import executor
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 from telethon.tl.types import PeerChannel
 from dotenv import load_dotenv
 import os
@@ -25,9 +26,19 @@ dp = Dispatcher(bot)
 # Словарь для хранения данных пользователей
 user_data = {}
 
+# Загрузка строки сессии из файла
+session_file = 'session.txt'
+if os.path.exists(session_file):
+    with open(session_file, 'r') as file:
+        session_string = file.read().strip()
+else:
+    session_string = None
+
+if not session_string:
+    raise ValueError("Session file not found or empty. Please provide a valid session file.")
+
 # Настройки клиента Telethon
-session_name = "telethon_session"
-telethon_client = TelegramClient(session_name, TELETHON_API_ID, TELETHON_API_HASH)
+telethon_client = TelegramClient(StringSession(session_string), TELETHON_API_ID, TELETHON_API_HASH)
 
 def contains_keywords(message, keywords):
     for keyword in keywords:
@@ -96,11 +107,10 @@ async def parse_and_send_messages(user_id):
     async with telethon_client:
         if not telethon_client.is_connected():
             await telethon_client.connect()
-        
+
         if not await telethon_client.is_user_authorized():
-            await telethon_client.send_code_request(PHONE_NUMBER)
-            code = input('Enter the code: ')
-            await telethon_client.sign_in(PHONE_NUMBER, code)
+            print("Unauthorized session, please log in using a valid session file.")
+            return
 
         async for message in telethon_client.iter_messages(channel):
             message_text = message.text
