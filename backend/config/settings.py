@@ -80,6 +80,25 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+
+    # Локальный Postgres, развернутый в докере
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'default',
+    #     'USER': 'adminuser',
+    #     'PASSWORD': '12345',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # },
+    
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'default',
+    #     'USER': 'adminuser',
+    #     'PASSWORD': '12345',
+    #     'HOST': 'default',
+    #     'PORT': '5432',
+    # },
 }
 
 
